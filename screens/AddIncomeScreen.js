@@ -2,11 +2,11 @@ import { StatusBar } from 'expo-status-bar';
 import { View, StyleSheet, Text } from 'react-native';
 import { React } from 'react';
 
-export default function HomeScreen() {
+export default function AddIncomeScreen() {
 
     return (
         <View style={styles.container}>
-            <Text>Home page</Text>
+            <Text>Income page</Text>
             <StatusBar style="auto" />
         </View>
     );

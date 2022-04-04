@@ -2,11 +2,11 @@ import { StatusBar } from 'expo-status-bar';
 import { View, StyleSheet, Text } from 'react-native';
 import { React } from 'react';
 
-export default function HistoryScreen() {
+export default function FindStoreScreen() {
 
     return (
         <View style={styles.container}>
-            <Text>History page</Text>
+            <Text>Find store</Text>
             <StatusBar style="auto" />
         </View>
     );
