@@ -1,37 +1,47 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, Image, FlatList } from 'react-native';
+import { StyleSheet, Text, View, Image, FlatList, ScrollView } from 'react-native';
 import { Button } from 'react-native-elements';
 import { getStorage, ref, getDownloadURL, list } from "firebase/storage";
 
 import CameraScreen from './CameraScreen';
-import { deleteItem } from '../connections/firebase';
+import TextModalScreen from './TextModalScreen';
+import { returnText, deleteItem } from '../connections/firebase';
 
 export default function ShoppingListScreen() {
     const [images, setImages] = useState([]);
+    const [texts, setTexts] = useState([]);
     const [isCameraVisible, setIsCameraVisible] = useState(false);
+    const [isTextVisible, setIsTextVisible] = useState(false);
 
     const storage = getStorage();
     const listRef = ref(storage, 'images/');
 
-    const handleDelete = async (uri) => {
-        deleteItem(uri);
+    const handleDelete = async (uri, parameter) => {
+        deleteItem(uri, parameter);
     };
 
-    const handleCameraVisibility = (data) => {
-        if (data != undefined) {
-            setIsCameraVisible(data);
+    const handleCameraVisibility = () => {
+        if (isCameraVisible) {
+            setIsCameraVisible(false);
         } else {
-            if (isCameraVisible) {
-                setIsCameraVisible(false);
-            } else {
-                setIsCameraVisible(true);
-            }
+            setIsCameraVisible(true);
+        }
+
+    };
+
+    const handleTextVisibility = () => {
+        if (isTextVisible) {
+            setIsTextVisible(false);
+        } else {
+            setIsTextVisible(true);
         }
     };
 
     const updateList = async () => {
         let imageAddresses = [];
+        let results = [];
         setImages([]);
+        setTexts([]);
 
         await list(listRef)
             .then((res) => {
@@ -59,40 +69,52 @@ export default function ShoppingListScreen() {
                     console.error(error);
                 });
         });
+        results = returnText();
+        if (results.length > 0) {
+            setTexts(results);
+        }
     };
 
     return (
         <View style={{ flex: 1 }}>
+            {isTextVisible ?
+                <TextModalScreen handleTextVisibility={handleTextVisibility} />
+                : null}
             {isCameraVisible ?
                 <CameraScreen handleCameraVisibility={handleCameraVisibility} />
                 : <View style={{ flex: 1 }}>
                     <Button title="Update list" onPress={() => updateList()} />
-                    <FlatList
-                        horizontal={false}
-                        showsHorizontalScrollIndicator={false}
-                        data={images}
-                        renderItem={({ item, index }) => (
-                            <View>
-                                <Image source={{ uri: item }}
-                                    key={index}
-                                    style={{
-                                        width: 260,
-                                        height: 300,
-                                        borderWidth: 2,
-                                        borderColor: 'white',
-                                        resizeMode: 'contain',
-                                        margin: 8,
-                                        marginLeft: 70
-                                    }}
-                                />
-                                <Button title="Delete" buttonStyle={{ margin: 2, marginLeft: 140, width: 125, backgroundColor: 'red' }} onPress={() => handleDelete(item)} />
-                            </View>
-                        )}
-                    />
+                    <ScrollView>
+                        <FlatList
+                            horizontal={false}
+                            showsHorizontalScrollIndicator={false}
+                            data={images}
+                            renderItem={({ item, index }) => (
+                                <View>
+                                    <Image source={{ uri: item }}
+                                        key={index}
+                                        style={styles.listItems}
+                                    />
+                                    <Button title="Delete" buttonStyle={{ margin: 2, marginLeft: 140, width: 125, backgroundColor: 'red' }} onPress={() => handleDelete(item, 'photo')} />
+                                </View>
+                            )}
+                        />
+                        <FlatList
+                            horizontal={false}
+                            showsHorizontalScrollIndicator={false}
+                            data={texts}
+                            renderItem={({ item, index }) => (
+                                <View>
+                                    <Text key={index} style={styles.listItems}>{item.value}</Text>
+                                    <Button title="Delete" buttonStyle={{ margin: 2, marginLeft: 140, width: 125, backgroundColor: 'red' }} onPress={() => handleDelete(item, 'text')} />
+                                </View>
+                            )}
+                        />
+                    </ScrollView>
                     <View style={styles.listContainer}>
                         <Button title="CAMERA" buttonStyle={styles.buttons} onPress={() => handleCameraVisibility()} />
-                        <Button title="VOICE" buttonStyle={styles.buttons} onPress={() => handleCameraVisibility()} />
-                        <Button title="TEXT" buttonStyle={styles.buttons} onPress={() => handleCameraVisibility()} />
+                        <Button title="VOICE" buttonStyle={styles.buttons} onPress={() => handleCameraVisibility()} disabled />
+                        <Button title="TEXT" buttonStyle={styles.buttons} onPress={() => handleTextVisibility()} />
                     </View>
                 </View>}
         </View>
@@ -117,5 +139,14 @@ const styles = StyleSheet.create({
     buttons: {
         margin: 2,
         width: 125
+    },
+    listItems: {
+        width: 260,
+        height: 300,
+        borderWidth: 2,
+        borderColor: 'white',
+        resizeMode: 'contain',
+        margin: 8,
+        marginLeft: 70
     }
 });

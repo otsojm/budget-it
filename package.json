@@ -29,6 +29,7 @@
     "react-native-reanimated": "2.3.1",
     "react-native-safe-area-context": "3.3.2",
     "react-native-web": "0.17.1",
+    "react-success-indicator": "^1.1.0",
     "rn-nodeify": "^10.3.0"
   },
   "devDependencies": {

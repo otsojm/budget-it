@@ -5426,7 +5426,12 @@
   "resolved" "https://registry.npmjs.org/react-refresh/-/react-refresh-0.4.3.tgz"
   "version" "0.4.3"
 
-"react@*", "react@^16.8.0", "react@^17.0.0", "react@^18.0.0", "react@>=17.0.1", "react@16 || 17", "react@17.0.1":
+"react-success-indicator@^1.1.0":
+  "integrity" "sha512-7eqGX3pqsKJQsaVfA97A04dVWGUwTpNq3hM8cTgoMPO7ax7IzRVux74jtTGUPgOCeNsk4yBJDqzyCRGMoAzmJA=="
+  "resolved" "https://registry.npmjs.org/react-success-indicator/-/react-success-indicator-1.1.0.tgz"
+  "version" "1.1.0"
+
+"react@*", "react@^16.8.0", "react@^17.0.0", "react@^18.0.0", "react@>=16", "react@>=17.0.1", "react@16 || 17", "react@17.0.1":
   "integrity" "sha512-lG9c9UuMHdcAexXtigOZLX8exLWkW0Ku29qPRU8uhF2R9BN96dLCt0psvzPLlHc5OWkgymP3qwTRgbnw5BKx3w=="
   "resolved" "https://registry.npmjs.org/react/-/react-17.0.1.tgz"
   "version" "17.0.1"

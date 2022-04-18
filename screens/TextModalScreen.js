@@ -1,12 +1,20 @@
 import React, { useState } from "react";
-import { Modal, StyleSheet, Text, Pressable, View } from "react-native";
+import { Modal, StyleSheet, Text, Pressable, View, TextInput, Dimensions } from "react-native";
+import { Button } from 'react-native-elements';
 
-export default function ModalScreen(props) {
+import { uploadText } from '../connections/firebase';
+
+export default function TextModalScreen(props) {
     const [modalVisible, setModalVisible] = useState(true);
+    const [text, setText] = useState('');
 
-    const handlePicture = (data) => {
-        props.handlePicture(data);
+    const handleText = (data) => {
+        props.handleTextVisibility();
         setModalVisible(false);
+        if (data) {
+            uploadText(text);
+        }
+        setText('');
     };
 
     return (
@@ -21,19 +29,18 @@ export default function ModalScreen(props) {
             >
                 <View style={styles.centeredView}>
                     <View style={styles.modalView}>
-                        <Text style={styles.modalText}>Do you want use the latest photo?</Text>
-                        <Pressable
-                            style={[styles.button, styles.buttonOpen]}
-                            onPress={() => handlePicture(true)}
-                        >
-                            <Text style={styles.textStyle}>Yes</Text>
-                        </Pressable>
-                        <Pressable
-                            style={[styles.button, styles.buttonClose]}
-                            onPress={() => handlePicture(false)}
-                        >
-                            <Text style={styles.textStyle}>No</Text>
-                        </Pressable>
+                        <TextInput
+                            multiline
+                            numberOfLines={20}
+                            onChangeText={text => setText(text)}
+                            value={text}
+                            style={styles.modalText}
+                            placeholder="Type here."
+                        />
+                        <View style={styles.listContainer}>
+                            <Button title="Save text" buttonStyle={[styles.button, styles.buttonOpen]} onPress={() => handleText(true)} />
+                            <Button title="Delete text" buttonStyle={[styles.button, styles.buttonClose]} onPress={() => handleText(false)} />
+                        </View>
                     </View>
                 </View>
             </Modal>
@@ -43,12 +50,20 @@ export default function ModalScreen(props) {
 
 const styles = StyleSheet.create({
     centeredView: {
-        flex: 0.4,
+        flex: 1,
         justifyContent: "center",
         alignItems: "center"
     },
+    listContainer: {
+        flexDirection: 'row',
+        position: 'absolute',
+        bottom: 15,
+        margin: 10
+    },
     modalView: {
         margin: 20,
+        width: Dimensions.get('window').width,
+        height: Dimensions.get('window').height,
         backgroundColor: "white",
         borderRadius: 20,
         padding: 35,
@@ -60,7 +75,8 @@ const styles = StyleSheet.create({
         },
         shadowOpacity: 0.25,
         shadowRadius: 4,
-        elevation: 5
+        elevation: 5,
+        paddingTop: 200
     },
     button: {
         borderRadius: 20,

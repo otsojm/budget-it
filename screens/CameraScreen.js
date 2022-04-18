@@ -41,7 +41,7 @@ export default function CameraScreen(props) {
     };
 
     const handleCameraVisibility = () => {
-        props.handleCameraVisibility(false);
+        props.handleCameraVisibility();
     };
 
     if (hasCameraPermission === false) {

@@ -7,8 +7,8 @@ import { NavigationContainer } from '@react-navigation/native';
 
 import HomeScreen from './screens/HomeScreen';
 import StatisticsScreen from './screens/StatisticsScreen';
-import AddExpenseScreen from './screens/AddExpenseScreen';
-import AddIncomeScreen from './screens/AddIncomeScreen';
+import ManageExpenseScreen from './screens/ManageExpenseScreen';
+import ManageIncomeScreen from './screens/ManageIncomeScreen';
 import ShoppingListScreen from './screens/ShoppingListScreen';
 import FindStoreScreen from './screens/FindStoreScreen';
 
@@ -41,8 +41,8 @@ export default function App() {
       <Drawer.Navigator initialRouteName="Home">
         <Drawer.Screen name="Home" component={HomeScreen} />
         <Drawer.Screen name="Statistics" component={StatisticsScreen} />
-        <Drawer.Screen name="Add expense" component={AddExpenseScreen} />
-        <Drawer.Screen name="Add income" component={AddIncomeScreen} />
+        <Drawer.Screen name="Manage expenses" component={ManageExpenseScreen} />
+        <Drawer.Screen name="Manage incomes" component={ManageIncomeScreen} />
         <Drawer.Screen name="Find store" component={FindStoreScreen} />
         <Drawer.Screen name="Shopping list" component={ShoppingListScreen} />
       </Drawer.Navigator>

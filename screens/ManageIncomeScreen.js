@@ -30,15 +30,14 @@ export default function AddIncomeScreen() {
                 <Picker.Item label="03-T Muu" value="03-T" />
             </Picker>
             <TextInput
-                multiline
-                numberOfLines={4}
+                numberOfLines={1}
                 onChangeText={amount => setAmount(amount)}
                 value={amount}
                 style={{ padding: 10 }}
                 placeholder="Amount"
                 keyboardType="numeric"
             />
-            <Button title="Save" buttonStyle={{ margin: 2 }} onPress={() => handleIncome()} />
+            <Button title="Save" buttonStyle={{ margin: 5, backgroundColor: 'green' }} onPress={() => handleIncome()} />
         </View>
     );
 }
