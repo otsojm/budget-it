@@ -1,7 +1,7 @@
 import { API_URL, APIKEY, AUTHDOMAIN, DATABASEURL, PROJECTID, STORAGEBUCKET, MESSAGINGSENDERID, APPID } from "@env";
 import { initializeApp } from "firebase/app";
 import { getDatabase, push, ref as refDatabase, onValue } from 'firebase/database';
-import { getStorage, ref, uploadBytes } from "firebase/storage";
+import { getStorage, ref, uploadBytes, deleteObject } from "firebase/storage";
 
 /* Web app's Firebase configuration. */
 const firebaseConfig = {
@@ -19,11 +19,45 @@ const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
 const storage = getStorage();
 
+/* Delete data from Firebase. */
+const deleteItem = (data) => {
+    console.log(data.split("images%2F")[1].split("?alt")[0]);
+
+    const storageRef = ref(storage, 'images/' + data.split("images%2F")[1].split("?alt")[0]);
+
+    deleteObject(storageRef).then(() => {
+        console.log('Data deleted!');
+    });
+};
+
 /* Push String type data to Firebase. */
-const saveItem = (data) => {
+const uploadText = (data) => {
     push(
         refDatabase(database, 'items/'),
         { 'product': data, 'amount': 1 });
+};
+
+/* Push Expense data to Firebase. */
+const uploadExpense = (selectedValue, amount) => {
+    push(
+        refDatabase(database, 'expense/'),
+        { 'name': selectedValue, 'amount': amount });
+};
+
+/* Push Income data to Firebase. */
+const uploadIncome = (selectedValue, amount) => {
+    push(
+        refDatabase(database, 'income/'),
+        { 'name': selectedValue, 'amount': amount });
+};
+
+/* Push Sound type data to Firebase. */
+const uploadSound = (data) => {
+    /*
+     push(
+         refDatabase(database, 'items/'),
+         { 'product': data, 'amount': 1 });
+         */
 };
 
 /* Push Image type data to Firebase. */
@@ -40,4 +74,4 @@ const uploadImage = async (uri) => {
     });
 }
 
-module.exports = uploadImage;
+module.exports = { uploadImage, uploadText, uploadExpense, uploadIncome, uploadSound, deleteItem };
