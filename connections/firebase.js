@@ -20,21 +20,56 @@ const database = getDatabase(app);
 const storage = getStorage();
 
 /* Return texts from Firebase. */
-const returnText = () => {
-    const databaseRef = refDatabase(database, 'texts');
+const returnTexts = () => {
+    const databaseRef = refDatabase(database, 'texts/');
     let items = [];
     onValue(databaseRef, (snapshot) => {
         const data = snapshot.val();
         if (data !== null) {
             Object.keys(data).forEach(key => {
-                Object.values(data).forEach(value => {
-                    items.push({ key: key, value: value.text })
-                });
+                items.push({ key: key, value: data[key].text })
             });
         }
     });
     if (items.length > 0) {
-        items.splice(items.length / 2, items.length / 2);
+        return items;
+    } else {
+        return [];
+    }
+};
+
+/* Return expenses from Firebase. */
+const returnExpenses = () => {
+    const databaseRef = refDatabase(database, 'expenses/');
+    let items = [];
+    onValue(databaseRef, (snapshot) => {
+        const data = snapshot.val();
+        if (data !== null) {
+            Object.keys(data).forEach(key => {
+                items.push({ key: key, amount: data[key].amount, description: data[key].description, name: data[key].name })
+            });
+        }
+    });
+    if (items.length > 0) {
+        return items;
+    } else {
+        return [];
+    }
+};
+
+/* Return incomes from Firebase. */
+const returnIncomes = () => {
+    const databaseRef = refDatabase(database, 'incomes/');
+    let items = [];
+    onValue(databaseRef, (snapshot) => {
+        const data = snapshot.val();
+        if (data !== null) {
+            Object.keys(data).forEach(key => {
+                items.push({ key: key, amount: data[key].amount, name: data[key].name })
+            });
+        }
+    });
+    if (items.length > 0) {
         return items;
     } else {
         return [];
@@ -43,6 +78,10 @@ const returnText = () => {
 
 /* Delete data from Firebase. */
 const deleteItem = (data, parameter) => {
+
+    console.log(data);
+    console.log(parameter);
+
     if (parameter == 'photo') {
         const storageRef = ref(storage, 'images/' + data.split("images%2F")[1].split("?alt")[0]);
         deleteObject(storageRef).then(() => {
@@ -53,6 +92,18 @@ const deleteItem = (data, parameter) => {
             refDatabase(database, 'texts/' + data.key)
         ).then(() => {
             console.log('Text deleted!')
+        });
+    } else if (parameter == 'expense') {
+        remove(
+            refDatabase(database, 'expenses/' + data.key)
+        ).then(() => {
+            console.log('Expense deleted!')
+        });
+    } else if (parameter == 'income') {
+        remove(
+            refDatabase(database, 'incomes/' + data.key)
+        ).then(() => {
+            console.log('Income deleted!')
         });
     }
 };
@@ -67,24 +118,15 @@ const uploadText = (data) => {
 /* Push Expense data to Firebase. */
 const uploadExpense = (selectedValue, description, amount) => {
     push(
-        refDatabase(database, 'expense/'),
+        refDatabase(database, 'expenses/'),
         { 'name': selectedValue, 'description': description, 'amount': amount });
 };
 
 /* Push Income data to Firebase. */
 const uploadIncome = (selectedValue, amount) => {
     push(
-        refDatabase(database, 'income/'),
+        refDatabase(database, 'incomes/'),
         { 'name': selectedValue, 'amount': amount });
-};
-
-/* Push Sound type data to Firebase. */
-const uploadSound = (data) => {
-    /*
-     push(
-         refDatabase(database, 'items/'),
-         { 'product': data, 'amount': 1 });
-         */
 };
 
 /* Push Image type data to Firebase. */
@@ -101,4 +143,4 @@ const uploadImage = async (uri) => {
     });
 }
 
-module.exports = { returnText, uploadImage, uploadText, uploadExpense, uploadIncome, uploadSound, deleteItem };
+module.exports = { returnTexts, returnExpenses, returnIncomes, uploadImage, uploadText, uploadExpense, uploadIncome, deleteItem };

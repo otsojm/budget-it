@@ -1,17 +1,21 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, TextInput, Text, ActivityIndicator } from 'react-native';
+import { View, TextInput, Text, ActivityIndicator, FlatList, ScrollView } from 'react-native';
 import { Button } from 'react-native-elements';
 import { Picker } from '@react-native-picker/picker';
 import { API_VALUE } from "@env";
+import Icon from 'react-native-vector-icons/FontAwesome';
 
-import { uploadExpense } from '../connections/firebase';
+import { uploadExpense, returnExpenses, deleteItem } from '../connections/firebase';
+
+import { styles } from '../styles/styleExpenses';
 
 export default function AddIncomeScreen() {
-    const [selectedValue, setSelectedValue] = useState('01-M');
+    const [selectedValue, setSelectedValue] = useState('01-M Ruokakauppa');
     const [description, setDescription] = useState('');
     const [amount, setAmount] = useState(0);
     const [item, setItem] = useState('');
     const [results, setResults] = useState([]);
+    const [expenses, setExpenses] = useState([]);
     const [jobId, setJobId] = useState('');
     const [isLoading, setIsLoading] = useState(false);
 
@@ -23,12 +27,26 @@ export default function AddIncomeScreen() {
         } else {
             uploadExpense(selectedValue, item, Math.floor(results.min_price * 0.93));
         }
-        setSelectedValue('01-M');
+        setSelectedValue('01-M Ruokakauppa');
         setDescription('');
         setAmount(0);
         setItem('');
         setResults([]);
-        setJobId(''); 
+        setJobId('');
+    };
+
+    async function getExpenses() {
+        let result = [];
+        setExpenses([]);
+
+        result = await returnExpenses();
+        if (result.length > 0) {
+            setExpenses(result);
+        }
+    };
+
+    const handleDelete = async (uri, parameter) => {
+        deleteItem(uri, parameter);
     };
 
     async function getData() {
@@ -58,19 +76,15 @@ export default function AddIncomeScreen() {
 
     return (
         <View
-            style={{
-                backgroundColor: 'white',
-                borderBottomColor: '#000000',
-                borderBottomWidth: 1,
-            }}>
+            style={styles.container}>
             <Picker
                 selectedValue={selectedValue}
-                style={{ height: 50, width: 150, marginLeft: 140 }}
-                onValueChange={(itemValue, itemIndex) => setSelectedValue(itemValue)}
+                style={styles.picker}
+                onValueChange={(itemValue) => setSelectedValue(itemValue)}
             >
-                <Picker.Item label="01-M Ruokakauppa" value="01-M" />
-                <Picker.Item label="02-M Elektroniikka" value="02-M" />
-                <Picker.Item label="03-M Muu" value="03-M" />
+                <Picker.Item label="01-M Ruokakauppa" value="01-M Ruokakauppa" />
+                <Picker.Item label="02-M Elektroniikka" value="02-M Elektroniikka" />
+                <Picker.Item label="03-M Muu" value="03-M Muu" />
             </Picker>
             <TextInput
                 multiline
@@ -81,8 +95,8 @@ export default function AddIncomeScreen() {
                 placeholder="Description"
             />
             <TextInput
-                onChangeText={amount => setAmount(amount)}
-                value={amount}
+                onChangeText={amount => setAmount(parseInt(amount))}
+                value={parseInt(amount)}
                 style={{ padding: 10 }}
                 placeholder="Amount"
                 keyboardType="numeric"
@@ -101,27 +115,30 @@ export default function AddIncomeScreen() {
                 onChangeText={item => setItem(item)}
                 value={item}
                 style={{ padding: 10 }}
-                placeholder="Type search parameter in English and press Get data"
+                placeholder="Type search parameter in English and press search"
             />
             {results.min_price ?
                 <Text style={{ marginLeft: 10 }}>{Math.floor(results.min_price * 0.93)} €</Text>
                 : <Text style={{ marginLeft: 10 }}>No results currently.</Text>}
-            <Button title="Get data" buttonStyle={{ margin: 5 }} onPress={() => getData()} />
-            <Button title="Save" buttonStyle={{ margin: 5, backgroundColor: 'green' }} onPress={() => handleExpense()} />
+            <ScrollView>
+                <FlatList
+                    horizontal={false}
+                    showsHorizontalScrollIndicator={false}
+                    data={expenses}
+                    renderItem={({ item, index }) => (
+                        <View key={index}>
+                            <Text style={styles.listItems}>{item.name}</Text>
+                            <Text style={styles.textDescription}>{item.description}</Text><Text style={styles.textAmount}>{item.amount} €</Text>
+                            <Button icon={<Icon name="trash-o" color="white" size={30} />} buttonStyle={styles.buttonDelete} onPress={() => handleDelete(item, 'expense')} />
+                        </View>
+                    )}
+                />
+            </ScrollView>
+            <View style={styles.listContainer}>
+                <Button icon={<Icon name="search" color="white" size={30} />} buttonStyle={styles.buttonSearch} onPress={() => getData()} />
+                <Button icon={<Icon name="save" color="white" size={30} />} buttonStyle={styles.buttonSave} onPress={() => handleExpense()} />
+                <Button icon={<Icon name="cloud-download" color="white" size={30} />} buttonStyle={styles.buttonCloud} onPress={() => getExpenses()} />
+            </View>
         </View>
     );
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#fff',
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    baseText: {
-        fontSize: 15,
-        margin: 10,
-        paddingLeft: 140
-    },
-});

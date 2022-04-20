@@ -1,33 +1,49 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, TextInput } from 'react-native';
+import { View, TextInput, ScrollView, FlatList, Text } from 'react-native';
 import { Button } from 'react-native-elements';
 import { Picker } from '@react-native-picker/picker';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
-import { uploadIncome } from '../connections/firebase';
+import { uploadIncome, returnIncomes, deleteItem } from '../connections/firebase';
+
+import { styles } from '../styles/styleIncomes';
 
 export default function AddIncomeScreen() {
-    const [selectedValue, setSelectedValue] = useState('01-T');
+    const [selectedValue, setSelectedValue] = useState('01-T Ansiotulo');
+    const [incomes, setIncomes] = useState([]);
     const [amount, setAmount] = useState(0);
 
     const handleIncome = () => {
         uploadIncome(selectedValue, amount);
+        setAmount(0);
+        setSelectedValue('01-T Ansiotulo');
+
+    };
+
+    async function getIncomes() {
+        let result = [];
+        setIncomes([]);
+
+        result = await returnIncomes();
+        if (result.length > 0) {
+            setIncomes(result);
+        }
+    };
+
+    const handleDelete = async (uri, parameter) => {
+        deleteItem(uri, parameter);
     };
 
     return (
-        <View
-            style={{
-                backgroundColor: 'white',
-                borderBottomColor: '#000000',
-                borderBottomWidth: 1,
-            }}>
+        <View style={styles.container}>
             <Picker
                 selectedValue={selectedValue}
-                style={{ height: 50, width: 150, marginLeft: 140 }}
-                onValueChange={(itemValue, itemIndex) => setSelectedValue(itemValue)}
+                style={styles.picker}
+                onValueChange={(itemValue) => setSelectedValue(itemValue)}
             >
-                <Picker.Item label="01-T Ansiotulo" value="01-T" />
-                <Picker.Item label="02-T Pääomatulo" value="02-T" />
-                <Picker.Item label="03-T Muu" value="03-T" />
+                <Picker.Item label="01-T Ansiotulo" value="01-T Ansiotulo" />
+                <Picker.Item label="02-T Pääomatulo" value="02-T Pääomatulo" />
+                <Picker.Item label="03-T Muu" value="03-T Muu" />
             </Picker>
             <TextInput
                 numberOfLines={1}
@@ -37,16 +53,24 @@ export default function AddIncomeScreen() {
                 placeholder="Amount"
                 keyboardType="numeric"
             />
-            <Button title="Save" buttonStyle={{ margin: 5, backgroundColor: 'green' }} onPress={() => handleIncome()} />
+            <View style={styles.listContainer}>
+                <Button icon={<Icon name="save" color="white" size={30} />} buttonStyle={styles.buttonSave} onPress={() => handleIncome()} />
+                <Button icon={<Icon name="cloud-download" color="white" size={30} />} buttonStyle={styles.buttonCloud} onPress={() => getIncomes()} />
+            </View>
+            <ScrollView>
+                <FlatList
+                    horizontal={false}
+                    showsHorizontalScrollIndicator={false}
+                    data={incomes}
+                    renderItem={({ item, index }) => (
+                        <View key={index}>
+                            <Text style={styles.listItems}>{item.name}</Text>
+                            <Text style={styles.textAmount}>{item.amount} €</Text>
+                            <Button icon={<Icon name="trash-o" color="white" size={30} />} buttonStyle={styles.buttonDelete} onPress={() => handleDelete(item, 'income')} />
+                        </View>
+                    )}
+                />
+            </ScrollView>
         </View>
     );
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#fff',
-        alignItems: 'center',
-        justifyContent: 'center',
-    }
-});

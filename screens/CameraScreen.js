@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, Image } from 'react-native';
+import { Text, View, Image } from 'react-native';
 import { Button } from 'react-native-elements';
 import { Camera } from 'expo-camera';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 import { uploadImage } from '../connections/firebase';
 import ModalScreen from './ModalScreen';
+
+import { styles } from '../styles/styleCamera';
+
 
 export default function CameraScreen(props) {
     const [hasCameraPermission, setHasCameraPermission] = useState(null);
@@ -60,8 +64,8 @@ export default function CameraScreen(props) {
                 </View>}
             <View style={styles.previewContainer}>
                 <Button
-                    title="Flip Image"
-                    buttonStyle={{ margin: 2 }}
+                    icon={<Icon name="exchange" color="white" size={30} />}
+                    buttonStyle={styles.buttonFlip}
                     onPress={() => {
                         setType(
                             type === Camera.Constants.Type.back
@@ -70,26 +74,10 @@ export default function CameraScreen(props) {
                         );
                     }}>
                 </Button>
-                <Button title="Take Picture" buttonStyle={{ margin: 2 }} onPress={() => takePicture()} />
-                <Button title="Go back" buttonStyle={{ margin: 2 }} onPress={() => handleModal()} />
+                <Button icon={<Icon name="camera" color="white" size={30} />} buttonStyle={styles.buttonTake} onPress={() => takePicture()} />
+                <Button icon={<Icon name="save" color="white" size={30} />} buttonStyle={styles.buttonExit} onPress={() => handleModal()} />
             </View>
             {image && <Image source={{ uri: image.uri }} style={{ flex: 1 }} />}
         </View>
     );
 }
-const styles = StyleSheet.create({
-    cameraContainer: {
-        flex: 1,
-        flexDirection: 'row'
-    },
-    fixedRatio: {
-        flex: 1,
-        aspectRatio: 1
-    },
-    previewContainer: {
-        flexDirection: 'row',
-        position: 'absolute',
-        top: 310,
-        margin: 50
-    }
-});

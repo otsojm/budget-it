@@ -1,5 +1,7 @@
-import { View, StyleSheet, Text, Image } from 'react-native';
+import { View, Text, Image } from 'react-native';
 import { React } from 'react';
+
+import { styles } from '../styles/styleHome';
 
 export default function HomeScreen() {
     const bodyText = "Budget-It on mobiiliapplikaatio oman henkilökohtaisen talouden menojen ja tulojen budjetoimiseen. Käyttäjä voi suunnitella tulevaa kulutustaan ja tulojaan sekä kategorisoida ne.\n\n" +
@@ -24,22 +26,3 @@ export default function HomeScreen() {
         </View>
     );
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#cfdeeb',
-        alignItems: 'center',
-        justifyContent: 'center'
-    },
-    baseText: {
-        fontSize: 12
-    },
-    imageContainer: {
-        paddingBottom: 100,
-    },
-    tinyLogo: {
-        width: 200,
-        height: 135,
-    }
-});
