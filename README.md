@@ -3,7 +3,7 @@
 
 Budget-It on mobiiliapplikaatio oman henkilökohtaisen talouden menojen ja tulojen budjetoimiseen. Käyttäjä voi suunnitella tulevaa kulutustaan ja tulojaan kategorisoimalla ne, esim. Ruokalasku 43.72 € (Ruokakauppa) ja palkka 2600.00 € (Ansiotulo). Hintatiedot lisätään joko manuaalisesti tai nimen perusteella tehdään rajapintaan haku.
 
-Applikaatiossa on mahdollista tarkastella kulutusta ja tuloja eri tavoilla (listana ja graafeina) ja applikaatio tekee arvion käyttäjän tulotason riittävyydestä hänen kulutustottumuksilleen. Käyttäjä voi luoda itselleen kauppalistoja ja applikaatio käyttää hyödykseen eri laiteominaisuuksia, joita käyttäjän mobiililaitteelta löytyy, kuten kamera (kuvien liittäminen kauppalistaan), mikrofoni (kauppalistan sanelu) ja sijainti (applikaatio etsii tietyn alan kaupat läheltä).
+Applikaatiossa on mahdollista tarkastella kulutusta ja tuloja eri tavoilla (listana ja graafeina) ja applikaatio tekee arvion käyttäjän tulotason riittävyydestä hänen kulutustottumuksilleen. Käyttäjä voi luoda itselleen kauppalistoja ja applikaatio käyttää hyödykseen eri laiteominaisuuksia, joita käyttäjän mobiililaitteelta löytyy, kuten kamera (kuvien liittäminen kauppalistaan) ja sijainti (applikaatio etsii tietyn alan kaupat läheltä).
 
 Tallennus tapahtuu Firebasen Storageen ja Realtime Databaseen.
 
