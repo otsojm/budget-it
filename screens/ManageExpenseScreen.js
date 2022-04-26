@@ -10,7 +10,8 @@ import { uploadExpense, returnExpenses, deleteItem } from '../connections/fireba
 import { styles } from '../styles/styleExpenses';
 
 export default function AddIncomeScreen() {
-    const [selectedValue, setSelectedValue] = useState('01-M Ruokakauppa');
+    const [selectedValue, setSelectedValue] = useState('Ruokakauppa');
+    const [selectedMonth, setSelectedMonth] = useState('Jan');
     const [description, setDescription] = useState('');
     const [amount, setAmount] = useState(0);
     const [item, setItem] = useState('');
@@ -21,13 +22,15 @@ export default function AddIncomeScreen() {
 
     let job_id = "";
 
+    /* Insert expenses to Firebase. */
     const handleExpense = () => {
         if (jobId == '') {
-            uploadExpense(selectedValue, description, amount);
+            uploadExpense(selectedValue, description, amount, selectedMonth);
         } else {
-            uploadExpense(selectedValue, item, Math.floor(results.min_price * 0.93));
+            uploadExpense(selectedValue, item, Math.floor(results.min_price * 0.93), selectedMonth);
         }
-        setSelectedValue('01-M Ruokakauppa');
+        setSelectedValue('Ruokakauppa');
+        setSelectedMonth('Jan');
         setDescription('');
         setAmount(0);
         setItem('');
@@ -35,6 +38,7 @@ export default function AddIncomeScreen() {
         setJobId('');
     };
 
+    /* Return expenses from Firebase. */
     async function getExpenses() {
         let result = [];
         setExpenses([]);
@@ -49,10 +53,12 @@ export default function AddIncomeScreen() {
         deleteItem(uri, parameter);
     };
 
+    /* Get price data from priceApi. */
     async function getData() {
         setResults([]);
         setIsLoading(true);
 
+        /* Making the request. */
         await fetch("https://api.priceapi.com/v2/jobs", {
             body: `token=${API_VALUE}&country=us&source=google_shopping&topic=search_results&key=term&max_age=43200&max_pages=1&sort_by=ranking_descending&condition=any&min_price=1&max_price=1000&values=` + item,
             headers: {
@@ -63,8 +69,9 @@ export default function AddIncomeScreen() {
             .then(response => response.json())
             .then(data => job_id = data.job_id);
 
-        setJobId(job_id)
+        setJobId(job_id);
 
+        /* Downloading the results. */
         setTimeout(async () => {
             await fetch("https://api.priceapi.com/v2/jobs/" + job_id + `/download?token=${API_VALUE}`)
                 .then(response => response.json())
@@ -78,13 +85,31 @@ export default function AddIncomeScreen() {
         <View
             style={styles.container}>
             <Picker
+                selectedValue={selectedMonth}
+                style={styles.picker}
+                onValueChange={(monthValue) => setSelectedMonth(monthValue)}
+            >
+                <Picker.Item label="Jan" value="Jan" />
+                <Picker.Item label="Feb" value="Feb" />
+                <Picker.Item label="Mar" value="Mar" />
+                <Picker.Item label="Apr" value="Apr" />
+                <Picker.Item label="May" value="May" />
+                <Picker.Item label="Jun" value="Jun" />
+                <Picker.Item label="Jul" value="Jul" />
+                <Picker.Item label="Aug" value="Aug" />
+                <Picker.Item label="Sep" value="Sep" />
+                <Picker.Item label="Oct" value="Oct" />
+                <Picker.Item label="Nov" value="Nov" />
+                <Picker.Item label="Dec" value="Dec" />
+            </Picker>
+            <Picker
                 selectedValue={selectedValue}
                 style={styles.picker}
                 onValueChange={(itemValue) => setSelectedValue(itemValue)}
             >
-                <Picker.Item label="01-M Ruokakauppa" value="01-M Ruokakauppa" />
-                <Picker.Item label="02-M Elektroniikka" value="02-M Elektroniikka" />
-                <Picker.Item label="03-M Muu" value="03-M Muu" />
+                <Picker.Item label="Ruokakauppa" value="Ruokakauppa" />
+                <Picker.Item label="Elektroniikka" value="Elektroniikka" />
+                <Picker.Item label="MuutMenot" value="MuutMenot" />
             </Picker>
             <TextInput
                 multiline
@@ -95,10 +120,11 @@ export default function AddIncomeScreen() {
                 placeholder="Description"
             />
             <TextInput
-                onChangeText={amount => setAmount(parseInt(amount))}
-                value={parseInt(amount)}
+                onChangeText={amount => setAmount(amount)}
+                value={amount}
                 style={{ padding: 10 }}
                 placeholder="Amount"
+                numericvalue
                 keyboardType="numeric"
             />
             <Text style={styles.baseText}>
@@ -127,7 +153,7 @@ export default function AddIncomeScreen() {
                     data={expenses}
                     renderItem={({ item, index }) => (
                         <View key={index}>
-                            <Text style={styles.listItems}>{item.name}</Text>
+                            <Text style={styles.listItems}>{item.name} {item.month}</Text>
                             <Text style={styles.textDescription}>{item.description}</Text><Text style={styles.textAmount}>{item.amount} €</Text>
                             <Button icon={<Icon name="trash-o" color="white" size={30} />} buttonStyle={styles.buttonDelete} onPress={() => handleDelete(item, 'expense')} />
                         </View>

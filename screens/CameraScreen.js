@@ -37,7 +37,6 @@ export default function CameraScreen(props) {
 
     const handlePicture = (data) => {
         handleCameraVisibility();
-
         if (data) {
             uploadImage(image.uri);
         }
@@ -47,7 +46,6 @@ export default function CameraScreen(props) {
     const handleCameraVisibility = () => {
         props.handleCameraVisibility();
     };
-
     if (hasCameraPermission === false) {
         return <Text>No access to camera.</Text>;
     };

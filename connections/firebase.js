@@ -46,7 +46,7 @@ const returnExpenses = () => {
         const data = snapshot.val();
         if (data !== null) {
             Object.keys(data).forEach(key => {
-                items.push({ key: key, amount: data[key].amount, description: data[key].description, name: data[key].name })
+                items.push({ key: key, amount: data[key].amount, description: data[key].description, name: data[key].name, month: data[key].month })
             });
         }
     });
@@ -65,7 +65,7 @@ const returnIncomes = () => {
         const data = snapshot.val();
         if (data !== null) {
             Object.keys(data).forEach(key => {
-                items.push({ key: key, amount: data[key].amount, name: data[key].name })
+                items.push({ key: key, amount: data[key].amount, name: data[key].name, month: data[key].month })
             });
         }
     });
@@ -78,9 +78,6 @@ const returnIncomes = () => {
 
 /* Delete data from Firebase. */
 const deleteItem = (data, parameter) => {
-
-    console.log(data);
-    console.log(parameter);
 
     if (parameter == 'photo') {
         const storageRef = ref(storage, 'images/' + data.split("images%2F")[1].split("?alt")[0]);
@@ -116,26 +113,24 @@ const uploadText = (data) => {
 };
 
 /* Push Expense data to Firebase. */
-const uploadExpense = (selectedValue, description, amount) => {
+const uploadExpense = (selectedValue, description, amount, selectedMonth) => {
     push(
         refDatabase(database, 'expenses/'),
-        { 'name': selectedValue, 'description': description, 'amount': amount });
+        { 'name': selectedValue, 'description': description, 'amount': amount, 'month': selectedMonth });
 };
 
 /* Push Income data to Firebase. */
-const uploadIncome = (selectedValue, amount) => {
+const uploadIncome = (selectedValue, amount, selectedMonth) => {
     push(
         refDatabase(database, 'incomes/'),
-        { 'name': selectedValue, 'amount': amount });
+        { 'name': selectedValue, 'amount': amount, 'month': selectedMonth });
 };
 
 /* Push Image type data to Firebase. */
 const uploadImage = async (uri) => {
     const response = await fetch(uri);
     const blob = await response.blob();
-
     const time = Date.now().toString();
-
     const storageRef = ref(storage, 'images/' + time);
 
     uploadBytes(storageRef, blob).then((snapshot) => {

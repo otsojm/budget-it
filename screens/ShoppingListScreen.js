@@ -19,10 +19,12 @@ export default function ShoppingListScreen() {
     const storage = getStorage();
     const listRef = ref(storage, 'images/');
 
+    /* Delete shopping list item from Firebase. */
     const handleDelete = async (uri, parameter) => {
         deleteItem(uri, parameter);
     };
 
+    /* Set camera screens visibility to true/false. */
     const handleCameraVisibility = () => {
         if (isCameraVisible) {
             setIsCameraVisible(false);
@@ -32,6 +34,7 @@ export default function ShoppingListScreen() {
 
     };
 
+    /* Set memos visibility to true/false. */
     const handleTextVisibility = () => {
         if (isTextVisible) {
             setIsTextVisible(false);
@@ -40,6 +43,7 @@ export default function ShoppingListScreen() {
         }
     };
 
+    /* Return shopping list items from Firebase. */
     const updateList = async () => {
         let imageAddresses = [];
         let results = [];

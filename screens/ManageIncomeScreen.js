@@ -9,17 +9,21 @@ import { uploadIncome, returnIncomes, deleteItem } from '../connections/firebase
 import { styles } from '../styles/styleIncomes';
 
 export default function AddIncomeScreen() {
-    const [selectedValue, setSelectedValue] = useState('01-T Ansiotulo');
+    const [selectedValue, setSelectedValue] = useState('Ansiotulo');
+    const [selectedMonth, setSelectedMonth] = useState('Jan');
     const [incomes, setIncomes] = useState([]);
     const [amount, setAmount] = useState(0);
 
+    /* Insert incomes to Firebase. */
     const handleIncome = () => {
-        uploadIncome(selectedValue, amount);
+        uploadIncome(selectedValue, amount, selectedMonth);
         setAmount(0);
-        setSelectedValue('01-T Ansiotulo');
+        setSelectedValue('Ansiotulo');
+        setSelectedMonth('Jan');
 
     };
 
+    /* Return incomes from Firebase. */
     async function getIncomes() {
         let result = [];
         setIncomes([]);
@@ -30,6 +34,7 @@ export default function AddIncomeScreen() {
         }
     };
 
+    /* Delete incomes from Firebase. */
     const handleDelete = async (uri, parameter) => {
         deleteItem(uri, parameter);
     };
@@ -37,13 +42,31 @@ export default function AddIncomeScreen() {
     return (
         <View style={styles.container}>
             <Picker
+                selectedValue={selectedMonth}
+                style={styles.picker}
+                onValueChange={(monthValue) => setSelectedMonth(monthValue)}
+            >
+                <Picker.Item label="Jan" value="Jan" />
+                <Picker.Item label="Feb" value="Feb" />
+                <Picker.Item label="Mar" value="Mar" />
+                <Picker.Item label="Apr" value="Apr" />
+                <Picker.Item label="May" value="May" />
+                <Picker.Item label="Jun" value="Jun" />
+                <Picker.Item label="Jul" value="Jul" />
+                <Picker.Item label="Aug" value="Aug" />
+                <Picker.Item label="Sep" value="Sep" />
+                <Picker.Item label="Oct" value="Oct" />
+                <Picker.Item label="Nov" value="Nov" />
+                <Picker.Item label="Dec" value="Dec" />
+            </Picker>
+            <Picker
                 selectedValue={selectedValue}
                 style={styles.picker}
                 onValueChange={(itemValue) => setSelectedValue(itemValue)}
             >
-                <Picker.Item label="01-T Ansiotulo" value="01-T Ansiotulo" />
-                <Picker.Item label="02-T Pääomatulo" value="02-T Pääomatulo" />
-                <Picker.Item label="03-T Muu" value="03-T Muu" />
+                <Picker.Item label="Ansiotulo" value="Ansiotulo" />
+                <Picker.Item label="Pääomatulo" value="Pääomatulo" />
+                <Picker.Item label="MuutTulot" value="MuutTulot" />
             </Picker>
             <TextInput
                 numberOfLines={1}
@@ -51,6 +74,7 @@ export default function AddIncomeScreen() {
                 value={amount}
                 style={{ padding: 10 }}
                 placeholder="Amount"
+                numericvalue
                 keyboardType="numeric"
             />
             <View style={styles.listContainer}>
@@ -64,7 +88,7 @@ export default function AddIncomeScreen() {
                     data={incomes}
                     renderItem={({ item, index }) => (
                         <View key={index}>
-                            <Text style={styles.listItems}>{item.name}</Text>
+                            <Text style={styles.listItems}>{item.name} {item.month}</Text>
                             <Text style={styles.textAmount}>{item.amount} €</Text>
                             <Button icon={<Icon name="trash-o" color="white" size={30} />} buttonStyle={styles.buttonDelete} onPress={() => handleDelete(item, 'income')} />
                         </View>

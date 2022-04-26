@@ -11,6 +11,7 @@ export default function TextModalScreen(props) {
     const [modalVisible, setModalVisible] = useState(true);
     const [text, setText] = useState('');
 
+    /* Insert text memo to Firebase. */
     const handleText = (data) => {
         props.handleTextVisibility();
         setModalVisible(false);

@@ -3,6 +3,7 @@ import { Modal, Text, Pressable, View } from "react-native";
 
 import { styles } from '../styles/styleModalScreen';
 
+/* Modal used with the camera screen */
 export default function ModalScreen(props) {
     const [modalVisible, setModalVisible] = useState(true);
 

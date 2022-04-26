@@ -1,7 +1,7 @@
 
 # Budget-It [![AGPL License](https://img.shields.io/badge/license-AGPL-blue.svg)](http://www.gnu.org/licenses/agpl-3.0)
 
-Budget-It on mobiiliapplikaatio oman henkilökohtaisen talouden menojen ja tulojen budjetoimiseen. Käyttäjä voi suunnitella tulevaa kulutustaan ja tulojaan kategorisoimalla ne, esim. Ruokalasku 43.72 € (01-M Ruokakauppa) ja palkka 2600.00 € (01-T Ansiotulo). Hintatiedot lisätään joko manuaalisesti tai nimen perusteella tehdään rajapintaan haku.
+Budget-It on mobiiliapplikaatio oman henkilökohtaisen talouden menojen ja tulojen budjetoimiseen. Käyttäjä voi suunnitella tulevaa kulutustaan ja tulojaan kategorisoimalla ne, esim. Ruokalasku 43.72 € (Ruokakauppa) ja palkka 2600.00 € (Ansiotulo). Hintatiedot lisätään joko manuaalisesti tai nimen perusteella tehdään rajapintaan haku.
 
 Applikaatiossa on mahdollista tarkastella kulutusta ja tuloja eri tavoilla (listana ja graafeina) ja applikaatio tekee arvion käyttäjän tulotason riittävyydestä hänen kulutustottumuksilleen. Käyttäjä voi luoda itselleen kauppalistoja ja applikaatio käyttää hyödykseen eri laiteominaisuuksia, joita käyttäjän mobiililaitteelta löytyy, kuten kamera (kuvien liittäminen kauppalistaan), mikrofoni (kauppalistan sanelu) ja sijainti (applikaatio etsii tietyn alan kaupat läheltä).
 
@@ -25,21 +25,26 @@ Tallennus tapahtuu Firebasen Storageen ja Realtime Databaseen.
 
 ```bash
 "dependencies": {
-    "@react-native-picker/picker": "^2.4.1",
+    "@react-native-picker/picker": "2.2.1",
     "@react-navigation/drawer": "^6.4.1",
     "@react-navigation/native": "^6.0.10",
     "expo": "~44.0.0",
     "expo-camera": "~12.1.2",
+    "expo-location": "^14.0.2",
     "expo-status-bar": "~1.2.0",
     "firebase": "^9.6.10",
     "react": "17.0.1",
     "react-dom": "17.0.1",
     "react-native": "0.64.3",
+    "react-native-chart-kit": "^6.12.0",
     "react-native-dotenv": "^3.3.1",
     "react-native-elements": "^3.4.2",
     "react-native-gesture-handler": "~2.1.0",
+    "react-native-maps": "0.29.4",
     "react-native-reanimated": "2.3.1",
     "react-native-safe-area-context": "3.3.2",
+    "react-native-svg": "12.1.1",
+    "react-native-vector-icons": "^9.1.0",
     "react-native-web": "0.17.1",
     "react-success-indicator": "^1.1.0",
     "rn-nodeify": "^10.3.0"
@@ -49,7 +54,7 @@ Tallennus tapahtuu Firebasen Storageen ja Realtime Databaseen.
 
 ## Demo
 
-- [Expo address here](https://placeholder.com)
+- [Expo address](https://expo.dev/@/projects/budget-it)
 
 
 ## Environment Variables
@@ -113,7 +118,14 @@ Start the server
     
 ## Screenshots
 
-![App Screenshot](https://via.placeholder.com/468x300?text=App+Screenshot+Here)
+<details><summary>Images</summary>
+<img src="https://i.ibb.co/CJYnmNz/1.jpg" width="250">
+<img src="https://i.ibb.co/55PRgZ6/2.jpg" width="250">
+<img src="https://i.ibb.co/LJ9zvTw/3.jpg" width="250">
+<img src="https://i.ibb.co/Npm4zhC/6.jpg" width="250">
+<img src="https://i.ibb.co/JkXqWrJ/5.jpg" width="250">
+<img src="https://i.ibb.co/7yVrgwL/4.jpg" width="250">
+</details>
 
 
 ## Related
