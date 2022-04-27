@@ -54,7 +54,7 @@ Tallennus tapahtuu Firebasen Storageen ja Realtime Databaseen.
 
 ## Demo
 
-- [Expo address](https://expo.dev/@/projects/budget-it)
+- [Expo address](https://expo.dev/@otsojm/budget-it)
 
 
 ## Environment Variables
